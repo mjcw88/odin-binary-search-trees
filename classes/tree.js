@@ -4,7 +4,8 @@ export class Tree {
     }
 
     buildTree(array) {
-
+        if (!Array.isArray(array)) throw new TypeError("Input must be an array");
+        if (array.length === 0) return;
     }
 
     includes(value) {
@@ -48,6 +49,6 @@ export class Tree {
     }
 
     rebalance() {
-        
+
     }
 }
