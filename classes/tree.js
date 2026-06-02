@@ -8,7 +8,7 @@ export class Tree {
     #isValid(array) {
         if (!Array.isArray(array)) throw new TypeError("Input must be an array");
         if (array.length === 0) throw new RangeError("Array cannot be empty");
-        if (array.some((x) => typeof x !== "number")) throw new TypeError("Array must contain only integers");
+        if (array.some((x) => typeof x !== "number")) throw new TypeError("Array must contain only numbers");
     }
 
     #merge(left, right) {
@@ -68,8 +68,16 @@ export class Tree {
         return this.#build(sortedArray, start, end);
     }
 
-    includes(value) {
+    #depthFirstTraversal(node, value) {
+        if (node === null) return false;
+        if (value === node.data) return true;
+        if (value < node.data) return this.#depthFirstTraversal(node.left, value);
+        if (value > node.data) return this.#depthFirstTraversal(node.right, value);
+    }
 
+    includes(value) {
+        if (typeof value !== "number") throw new TypeError("Input must be a number");
+        return this.#depthFirstTraversal(this.root, value);
     }
 
     insert(value) {
@@ -113,16 +121,16 @@ export class Tree {
     }
 }
 
-const prettyPrint = (node, prefix = '', isLeft = true) => {
-  if (node === null || node === undefined) {
-    return;
-  }
+// const prettyPrint = (node, prefix = '', isLeft = true) => {
+//   if (node === null || node === undefined) {
+//     return;
+//   }
 
-  prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
-  prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-}
+//   prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
+//   console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
+//   prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
+// }
 
-const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-const tree = new Tree(array);
-prettyPrint(tree.root);
+// const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+// const tree = new Tree(array);
+// prettyPrint(tree.root);
