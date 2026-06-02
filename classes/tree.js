@@ -11,6 +11,10 @@ export class Tree {
         if (array.some((x) => typeof x !== "number")) throw new TypeError("Array must contain only numbers");
     }
 
+    #isNumber(value) {
+        if (typeof value !== "number") throw new TypeError("Input must be a number");
+    }
+
     #merge(left, right) {
         const sortedArray = [];
         let i = 0;
@@ -75,13 +79,21 @@ export class Tree {
         if (value > node.data) return this.#depthFirstTraversal(node.right, value);
     }
 
+    #insertNode(node, value) {
+        if (node === null) node = new Node(value);
+        if (value < node.data) node.left = this.#insertNode(node.left, value);
+        if (value > node.data) node.right = this.#insertNode(node.right, value);
+        return node;
+    }
+
     includes(value) {
-        if (typeof value !== "number") throw new TypeError("Input must be a number");
+        this.#isNumber(value);
         return this.#depthFirstTraversal(this.root, value);
     }
 
     insert(value) {
-
+        this.#isNumber(value);
+        this.#insertNode(this.root, value);
     }
 
     deleteItem(value) {
@@ -134,3 +146,7 @@ export class Tree {
 // const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 // const tree = new Tree(array);
 // prettyPrint(tree.root);
+
+const tree = new Tree([4]);
+tree.insert(1);
+tree.insert(7);
