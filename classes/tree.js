@@ -15,112 +15,121 @@ export class Tree {
         if (typeof value !== "number") throw new TypeError("Input must be a number");
     }
 
-    #merge(left, right) {
-        const sortedArray = [];
-        let i = 0;
-        let j = 0;
-
-        while (i < left.length && j < right.length) {
-            if (left[i] < right[j]) {
-                sortedArray.push(left[i]);
-                i++;
-            } else if (right[j] < left[i]) {
-                sortedArray.push(right[j]);
-                j++;
-            } else {
-                sortedArray.push(left[i]);
-                i++;
-                j++;
-            }
-        }
-        sortedArray.push(...left.slice(i), ...right.slice(j));
-        return sortedArray;
-    }
-
-    #mergeSort(array) {
-        if (array.length === 1) return array;
-
-        const middle = Math.ceil(array.length / 2);
-        const leftSide = array.slice(0, middle);
-        const rightSide = array.slice(middle, array.length);
-
-        const sortedLeft = this.#mergeSort(leftSide);
-        const sortedRight = this.#mergeSort(rightSide);
-        
-        return this.#merge(sortedLeft, sortedRight);
-    }
-
-    #build(array, start, end) {
-        if (start > end) return null;
-
-        const mid = Math.floor((start + end) / 2);
-        const root = new Node(array[mid]);
-
-        root.left = this.#build(array, start, mid - 1);
-        root.right = this.#build(array, mid + 1, end);
-
-        return root;
+    #isCallback(callback) {
+        if (!callback) throw new Error("A callback is required");
     }
 
     #buildTree(array) {
         this.#isValid(array);
-        const sortedArray = this.#mergeSort(array);
+
+        const merge = (left, right) => {
+            const sortedArray = [];
+            let i = 0;
+            let j = 0;
+
+            while (i < left.length && j < right.length) {
+                if (left[i] < right[j]) {
+                    sortedArray.push(left[i]);
+                    i++;
+                } else if (right[j] < left[i]) {
+                    sortedArray.push(right[j]);
+                    j++;
+                } else {
+                    sortedArray.push(left[i]);
+                    i++;
+                    j++;
+                }
+            }
+            sortedArray.push(...left.slice(i), ...right.slice(j));
+            return sortedArray;
+        }
+
+        const mergeSort = (array) => {
+            if (array.length === 1) return array;
+
+            const middle = Math.ceil(array.length / 2);
+            const leftSide = array.slice(0, middle);
+            const rightSide = array.slice(middle, array.length);
+
+            const sortedLeft = mergeSort(leftSide);
+            const sortedRight = mergeSort(rightSide);
+            
+            return merge(sortedLeft, sortedRight);
+        }
+
+        const sortedArray = mergeSort(array);
 
         const start = 0;
         const end = sortedArray.length - 1;
 
-        return this.#build(sortedArray, start, end);
-    }
+        const build = (array, start, end) => {
+            if (start > end) return null;
 
-    #depthFirstTraversal(node, value) {
-        if (node === null) return false;
-        if (node.data === value) return true;
-        if (value < node.data) return this.#depthFirstTraversal(node.left, value);
-        if (value > node.data) return this.#depthFirstTraversal(node.right, value);
+            const mid = Math.floor((start + end) / 2);
+            const root = new Node(array[mid]);
+
+            root.left = build(array, start, mid - 1);
+            root.right = build(array, mid + 1, end);
+
+            return root;
+        }
+
+        return build(sortedArray, start, end);
     }
 
     includes(value) {
         this.#isNumber(value);
-        return this.#depthFirstTraversal(this.root, value);
-    }
 
-    #insertNode(node, value) {
-        if (node === null) node = new Node(value);
-        if (node.data > value) node.left = this.#insertNode(node.left, value);
-        if (node.data < value) node.right = this.#insertNode(node.right, value);
-        return node;
+        const depthFirstTraversal = (node, value) => {
+            if (node === null) return false;
+            if (node.data === value) return true;
+            if (value < node.data) return depthFirstTraversal(node.left, value);
+            if (value > node.data) return depthFirstTraversal(node.right, value);
+        }
+
+        return depthFirstTraversal(this.root, value);
     }
 
     insert(value) {
         this.#isNumber(value);
-        this.#insertNode(this.root, value);
-    }
 
-    #getSuccessor(node) {
-        node = node.right;
-        while (node !== null && node.left !== null)
-            node = node.left;
-        return node;
-    }
-
-    #deleteNode(node, value) {
-        if (node === null) return node;
-        if (node.data > value) node.left = this.#deleteNode(node.left, value);
-        if (node.data < value) node.right = this.#deleteNode(node.right, value);
-        if (node.data === value) {
-            if (node.left === null) return node.right;
-            if (node.right === null) return node.left;
-
-            const successor = this.#getSuccessor(node);
-            node.data = successor.data;
-            node.right = this.#deleteNode(node.right, successor.data);
+        const insertNode = (node, value) => {
+            if (node === null) node = new Node(value);
+            if (node.data > value) node.left = insertNode(node.left, value);
+            if (node.data < value) node.right = insertNode(node.right, value);
+            return node;
         }
-        return node;
+
+        insertNode(this.root, value);
     }
 
     deleteItem(value) {
         this.#isNumber(value);
-        this.root = this.#deleteNode(this.root, value);
+
+        const getSuccessor = (node) => {
+            node = node.right;
+            while (node !== null && node.left !== null) {
+                node = node.left;
+            }
+            return node;
+        }
+
+        const deleteNode = (node, value) => {
+            if (node === null) return node;
+            if (node.data > value) node.left = deleteNode(node.left, value);
+            if (node.data < value) node.right = deleteNode(node.right, value);
+            if (node.data === value) {
+                if (node.left === null) return node.right;
+                if (node.right === null) return node.left;
+
+                const successor = getSuccessor(node);
+                node.data = successor.data;
+                node.right = deleteNode(node.right, successor.data);
+            }
+            return node;
+        }
+
+        this.root = deleteNode(this.root, value);
     }
 
     levelOrderForEach(callback) {
@@ -139,15 +148,42 @@ export class Tree {
     }
 
     inOrderForEach(callback) {
+        this.#isCallback(callback);
+        if (!this.root) return;
 
+        const inOrder = (node) => {
+            if (node === null) return;
+            inOrder(node.left);
+            callback(node.data);
+            inOrder(node.right);
+        };
+        inOrder(tree.root);
     }
 
     preOrderForEach(callback) {
+        this.#isCallback(callback);
+        if (!this.root) return;
 
+        const preOrder = (node) => {
+            if (node === null) return;
+            callback(node.data);
+            preOrder(node.left);
+            preOrder(node.right);
+        };
+        preOrder(tree.root);
     }
 
     postOrderForEach(callback) {
+        this.#isCallback(callback);
+        if (!this.root) return;
 
+        const postOrder = (node) => {
+            if (node === null) return;
+            postOrder(node.left);
+            postOrder(node.right);
+            callback(node.data);
+        };
+        postOrder(tree.root);
     }
 
     height(value) {
@@ -179,4 +215,4 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 
 const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(array);
-//prettyPrint(tree.root);
+prettyPrint(tree.root);

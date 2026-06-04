@@ -216,3 +216,90 @@ describe("Tree (levelOrderForEach)", () => {
         expect(values).toEqual([16, 8, 134, 2, 10, 18, 648, 6, 14, 46, 12690]);
     })
 })
+
+describe("Tree (inOrderForEach)", () => {
+    test("doesn't accept no callback", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(() => tree.inOrderForEach()).toThrow(Error);
+    })
+    test("In-order traversal (converts to string and concatenates)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        let string = "";
+        tree.inOrderForEach(value => string = string + value + " ");
+        expect(string).toEqual("1 3 4 5 7 8 9 23 67 324 6345 ");
+    })
+    test("In-order traversal traversal (adds to array)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const values = [];
+        tree.inOrderForEach(value => values.push(value));
+        expect(values).toEqual([1, 3, 4, 5, 7, 8, 9, 23, 67, 324, 6345]);
+    })
+    test("In-order traversal traversal (add to array and double each value)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const values = [];
+        tree.inOrderForEach(value => values.push(value * 2));
+        expect(values).toEqual([2, 6, 8, 10, 14, 16, 18, 46, 134, 648, 12690]);
+    })
+})
+
+describe("Tree (preOrderForEach)", () => {
+    test("doesn't accept no callback", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(() => tree.preOrderForEach()).toThrow(Error);
+    })
+    test("Pre-order traversal (converts to string and concatenates)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        let string = "";
+        tree.preOrderForEach(value => string = string + value + " ");
+        expect(string).toEqual("8 4 1 3 5 7 67 9 23 324 6345 ");
+    })
+    test("Pre-order traversal traversal (adds to array)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const values = [];
+        tree.preOrderForEach(value => values.push(value));
+        expect(values).toEqual([8, 4, 1, 3, 5, 7, 67, 9, 23, 324, 6345]);
+    })
+    test("Pre-order traversal traversal (add to array and double each value)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const values = [];
+        tree.preOrderForEach(value => values.push(value * 2));
+        expect(values).toEqual([16, 8, 2, 6, 10, 14, 134, 18, 46, 648, 12690]);
+    })
+})
+
+describe("Tree (postOrderForEach)", () => {
+    test("doesn't accept no callback", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(() => tree.postOrderForEach()).toThrow(Error);
+    })
+    test("Post-order traversal (converts to string and concatenates)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        let string = "";
+        tree.postOrderForEach(value => string = string + value + " ");
+        expect(string).toEqual("3 1 7 5 4 23 9 6345 324 67 8 ");
+    })
+    test("Post-order traversal traversal (adds to array)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const values = [];
+        tree.postOrderForEach(value => values.push(value));
+        expect(values).toEqual([3, 1, 7, 5, 4, 23, 9, 6345, 324, 67, 8]);
+    })
+    test("Post-order traversal traversal (add to array and double each value)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const values = [];
+        tree.postOrderForEach(value => values.push(value * 2));
+        expect(values).toEqual([6, 2, 14, 10, 8, 46, 18, 12690, 648, 134, 16]);
+    })
+})
