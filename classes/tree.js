@@ -74,16 +74,9 @@ export class Tree {
 
     #depthFirstTraversal(node, value) {
         if (node === null) return false;
-        if (value === node.data) return true;
+        if (node.data === value) return true;
         if (value < node.data) return this.#depthFirstTraversal(node.left, value);
         if (value > node.data) return this.#depthFirstTraversal(node.right, value);
-    }
-
-    #insertNode(node, value) {
-        if (node === null) node = new Node(value);
-        if (value < node.data) node.left = this.#insertNode(node.left, value);
-        if (value > node.data) node.right = this.#insertNode(node.right, value);
-        return node;
     }
 
     includes(value) {
@@ -91,13 +84,43 @@ export class Tree {
         return this.#depthFirstTraversal(this.root, value);
     }
 
+    #insertNode(node, value) {
+        if (node === null) node = new Node(value);
+        if (node.data > value) node.left = this.#insertNode(node.left, value);
+        if (node.data < value) node.right = this.#insertNode(node.right, value);
+        return node;
+    }
+
     insert(value) {
         this.#isNumber(value);
         this.#insertNode(this.root, value);
     }
 
-    deleteItem(value) {
+    #getSuccessor(node) {
+        node = node.right;
+        while (node !== null && node.left !== null)
+            node = node.left;
+        return node;
+    }
 
+    #deleteNode(node, value) {
+        if (node === null) return node;
+        if (node.data > value) node.left = this.#deleteNode(node.left, value);
+        if (node.data < value) node.right = this.#deleteNode(node.right, value);
+        if (node.data === value) {
+            if (node.left === null) return node.right;
+            if (node.right === null) return node.left;
+
+            const successor = this.#getSuccessor(node);
+            node.data = successor.data;
+            node.right = this.#deleteNode(node.right, successor.data);
+        }
+        return node;
+    }
+
+    deleteItem(value) {
+        this.#isNumber(value);
+        this.root = this.#deleteNode(this.root, value);
     }
 
     levelOrderForEach(callback) {
@@ -147,6 +170,6 @@ export class Tree {
 // const tree = new Tree(array);
 // prettyPrint(tree.root);
 
-const tree = new Tree([4]);
-tree.insert(1);
-tree.insert(7);
+const value = 4;
+const tree = new Tree([value]);
+tree.deleteItem(value);

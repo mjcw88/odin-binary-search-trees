@@ -70,10 +70,9 @@ describe("Tree (includes)", () => {
     test("returns true from multi node tree", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
-        expect(tree.includes(3)).toBe(true);
-        expect(tree.includes(7)).toBe(true);
-        expect(tree.includes(23)).toBe(true);
-        expect(tree.includes(6345)).toBe(true);
+        const nodes = [3, 7, 23, 6345];
+        
+        nodes.forEach(v => expect(tree.includes(v)).toBe(true));
     })
 })
 
@@ -84,34 +83,25 @@ describe("Tree (insert)", () => {
     })
     test("inserts nodes from 1 node tree", () => {
         const tree = new Tree([4]);
-        tree.insert(1);
-        tree.insert(7);
-        expect(tree.includes(1)).toBe(true);
-        expect(tree.includes(7)).toBe(true);
+        const inserts = [1, 7];
+
+        inserts.forEach(v => tree.insert(v));
+        inserts.forEach(v => expect(tree.includes(v)).toBe(true));
     })
     test("inserts nodes from multi node tree", () => {
         const array = [1, 4, 8, 5, 9, 67, 324];
         const tree = new Tree(array);
-        tree.insert(3);
-        tree.insert(7);
-        tree.insert(23);
-        tree.insert(6345);
-        expect(tree.includes(3)).toBe(true);
-        expect(tree.includes(7)).toBe(true);
-        expect(tree.includes(23)).toBe(true);
-        expect(tree.includes(6345)).toBe(true);
+        const inserts = [3, 7, 23, 6345];
+
+        inserts.forEach(v => tree.insert(v));
+        inserts.forEach(v => expect(tree.includes(v)).toBe(true));
     })
     test("inserts nodes whilst preserving order", () => {
         const array = [7, 4, 23, 8, 3, 67, 6345];
         const tree = new Tree(array);
-        tree.insert(1);
-        tree.insert(5);
-        tree.insert(9);
-        tree.insert(324);
-        expect(tree.includes(1)).toBe(true);
-        expect(tree.includes(5)).toBe(true);
-        expect(tree.includes(9)).toBe(true);
-        expect(tree.includes(324)).toBe(true);
+        const inserts = [1, 5, 9, 324];
+        inserts.forEach(v => tree.insert(v));
+        inserts.forEach(v => expect(tree.includes(v)).toBe(true));
         const values = [];
         const inOrder = (node) => {
             if (node === null) return;
@@ -137,4 +127,63 @@ describe("Tree (insert)", () => {
         inOrder(tree.root);
         expect(values.length).toBe(array.length);
     });
+})
+
+describe("Tree (deleteItem)", () => {
+    test("throws type error from non-number data type", () => {
+        const tree = new Tree([0]);
+        expect(() => tree.deleteItem("0")).toThrow(TypeError);
+    })
+    test("deletes node from 1 node tree", () => {
+        const value = 4;
+        const tree = new Tree([value]);
+        tree.deleteItem(value);
+        expect(tree.includes(value)).toBe(false);
+    })
+    test("deletes node with no children", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const toDelete = [3, 7, 23, 6345];
+        const remaining = array.filter(v => !toDelete.includes(v));
+
+        toDelete.forEach(v => tree.deleteItem(v));
+        toDelete.forEach(v => expect(tree.includes(v)).toBe(false));
+        remaining.forEach(v => expect(tree.includes(v)).toBe(true));
+    })
+    test("deletes node with 1 child", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const toDelete = [1, 5, 9, 324];
+        const remaining = array.filter(v => !toDelete.includes(v));
+
+        toDelete.forEach(v => tree.deleteItem(v));
+        toDelete.forEach(v => expect(tree.includes(v)).toBe(false));
+        remaining.forEach(v => expect(tree.includes(v)).toBe(true));
+    })
+    test("deletes node with 2 children", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const toDelete = [4, 67];
+        const remaining = array.filter(v => !toDelete.includes(v));
+
+        toDelete.forEach(v => tree.deleteItem(v));
+        toDelete.forEach(v => expect(tree.includes(v)).toBe(false));
+        remaining.forEach(v => expect(tree.includes(v)).toBe(true));
+    })
+    test("doesn't delete anything if value is not tree", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        tree.deleteItem(420);
+        tree.deleteItem(69);
+        tree.deleteItem(42069);
+        const values = [];
+        const inOrder = (node) => {
+            if (node === null) return;
+            inOrder(node.left);
+            values.push(node.data);
+            inOrder(node.right);
+        };
+        inOrder(tree.root);
+        expect(values.length).toBe(array.length);
+    })
 })
