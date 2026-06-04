@@ -71,7 +71,7 @@ describe("Tree (includes)", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         const nodes = [3, 7, 23, 6345];
-        
+
         nodes.forEach(v => expect(tree.includes(v)).toBe(true));
     })
 })
@@ -185,5 +185,34 @@ describe("Tree (deleteItem)", () => {
         };
         inOrder(tree.root);
         expect(values.length).toBe(array.length);
+    })
+})
+
+describe("Tree (levelOrderForEach)", () => {
+    test("doesn't accept no callback", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(() => tree.levelOrderForEach()).toThrow(Error);
+    })
+    test("breadth-first level traversal (converts to string and concatenates)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        let string = "";
+        tree.levelOrderForEach(value => string = string + value + " ");
+        expect(string).toEqual("8 4 67 1 5 9 324 3 7 23 6345 ");
+    })
+    test("breadth-first level traversal (adds to array)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const values = [];
+        tree.levelOrderForEach(value => values.push(value));
+        expect(values).toEqual([8, 4, 67, 1, 5, 9, 324, 3, 7, 23, 6345]);
+    })
+    test("breadth-first level traversal (add to array and double each value)", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        const values = [];
+        tree.levelOrderForEach(value => values.push(value * 2));
+        expect(values).toEqual([16, 8, 134, 2, 10, 18, 648, 6, 14, 46, 12690]);
     })
 })
