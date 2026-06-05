@@ -5,6 +5,7 @@ export class Tree {
         this.root = this.#buildTree(array);
     }
 
+    // Private Methods
     #isValid(array) {
         if (!Array.isArray(array)) throw new TypeError("Input must be an array");
         if (array.length === 0) throw new RangeError("Array cannot be empty");
@@ -73,10 +74,10 @@ export class Tree {
 
             return root;
         }
-
         return build(sortedArray, start, end);
     }
 
+    // Public Methods
     includes(value) {
         this.#isNumber(value);
 
@@ -86,7 +87,6 @@ export class Tree {
             if (value < node.data) return depthFirstTraversal(node.left, value);
             if (value > node.data) return depthFirstTraversal(node.right, value);
         }
-
         return depthFirstTraversal(this.root, value);
     }
 
@@ -99,7 +99,6 @@ export class Tree {
             if (node.data < value) node.right = insertNode(node.right, value);
             return node;
         }
-
         insertNode(this.root, value);
     }
 
@@ -128,12 +127,11 @@ export class Tree {
             }
             return node;
         }
-
         this.root = deleteNode(this.root, value);
     }
 
     levelOrderForEach(callback) {
-        if (!callback) throw new Error("A callback is required");
+        this.#isCallback(callback);
         if (!this.root) return;
 
         const queue = [this.root];
@@ -149,7 +147,6 @@ export class Tree {
 
     inOrderForEach(callback) {
         this.#isCallback(callback);
-        if (!this.root) return;
 
         const inOrder = (node) => {
             if (node === null) return;
@@ -162,7 +159,6 @@ export class Tree {
 
     preOrderForEach(callback) {
         this.#isCallback(callback);
-        if (!this.root) return;
 
         const preOrder = (node) => {
             if (node === null) return;
@@ -175,7 +171,6 @@ export class Tree {
 
     postOrderForEach(callback) {
         this.#isCallback(callback);
-        if (!this.root) return;
 
         const postOrder = (node) => {
             if (node === null) return;
@@ -187,11 +182,37 @@ export class Tree {
     }
 
     height(value) {
+        this.#isNumber(value);
 
+        const findNode = (node, value) => {
+            if (node === null) return;
+            if (node.data === value) return findHeight(node);
+            if (value < node.data) return findNode(node.left, value);
+            if (value > node.data) return findNode(node.right, value);
+        }
+
+        const findHeight = (node) => {
+            if (node === null) return -1;
+
+            let leftHeight = findHeight(node.left);
+            let rightHeight = findHeight(node.right);
+
+            return Math.max(leftHeight, rightHeight) + 1;
+        }
+        return findNode(this.root, value);
     }
 
     depth(value) {
+        this.#isNumber(value);
+        let count = 0;
 
+        const findDepth = (node, value, count) => {
+            if (node === null) return;
+            if (node.data === value) return count;
+            if (value < node.data) return findDepth(node.left, value, count + 1);
+            if (value > node.data) return findDepth(node.right, value, count + 1);
+        }
+        return findDepth(this.root, value, count);
     }
 
     isBalanced() {
@@ -216,3 +237,8 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
 const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
 const tree = new Tree(array);
 prettyPrint(tree.root);
+
+console.log(tree.height(8));
+console.log(tree.height(67));
+console.log(tree.height(324));
+console.log(tree.height(6345));

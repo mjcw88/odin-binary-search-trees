@@ -303,3 +303,67 @@ describe("Tree (postOrderForEach)", () => {
         expect(values).toEqual([6, 2, 14, 10, 8, 46, 18, 12690, 648, 134, 16]);
     })
 })
+
+describe("Tree (height)", () => {
+    test("throws type error from non-number data type", () => {
+        const tree = new Tree([0]);
+        expect(() => tree.height("0")).toThrow(TypeError);
+    })
+    test("returns undefined from value not found", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.height(420)).toBe(undefined);
+    })
+    test("returns 3 from node 8", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.height(8)).toBe(3);
+    })
+    test("returns 2 from node 4", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.height(4)).toBe(2);
+    })
+    test("returns 1 from node 9", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.height(9)).toBe(1);
+    })
+    test("returns 0 from node 6345", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.height(6345)).toBe(0);
+    })
+})
+
+describe("Tree (depth)", () => {
+    test("throws type error from non-number data type", () => {
+        const tree = new Tree([0]);
+        expect(() => tree.height("0")).toThrow(TypeError);
+    })
+    test("returns undefined from value not found", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.depth(420)).toBe(undefined);
+    })
+    test("returns 3 from node 6345", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.depth(6345)).toBe(3);
+    })
+    test("returns 2 from node 9", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.depth(9)).toBe(2);
+    })
+    test("returns 1 from node 4", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.depth(4)).toBe(1);
+    })
+    test("returns 0 from node 8", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.depth(8)).toBe(0);
+    })
+})
