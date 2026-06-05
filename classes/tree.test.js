@@ -1,36 +1,36 @@
 import { Tree } from "./tree.js";
 
 describe("Tree (buildTree)", () => {
-    test("throws range error for empty array", () => {
+    test("Throws range error for empty array", () => {
         expect(() => new Tree([])).toThrow(RangeError);
     })
-    test("throws type error for non-array data type", () => {
+    test("Throws type error for non-array data type", () => {
         expect(() => new Tree("Hello, World!")).toThrow(TypeError);
         expect(() => new Tree(123)).toThrow(TypeError);
     })
-    test("throws type error for array containing non-integer data type", () => {
+    test("Throws type error for array containing non-integer data type", () => {
         expect(() => new Tree(["Hello, World!", 0, 1, 2])).toThrow(TypeError);
     })
-    test("builds 1 node tree", () => {
+    test("Builds 1 node tree", () => {
         const array = [0];
         const tree = new Tree(array);
         expect(tree.root.data).toBe(array[0]);
     })
-    test("sorts and builds 3 node tree", () => {
+    test("Sorts and builds 3 node tree", () => {
         const array = [7, 1, 4];
         const tree = new Tree(array);
         expect(tree.root.data).toBe(4);
         expect(tree.root.left.data).toBe(1);
         expect(tree.root.right.data).toBe(7);
     })
-    test("sorts and builds large node tree", () => {
+    test("Sorts and builds large node tree", () => {
         const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.root.data).toBe(8);
         expect(tree.root.left.data).toBe(4);
         expect(tree.root.right.data).toBe(67);
     })
-    test("sorts and builds tree without duplicates", () => {
+    test("Sorts and builds tree without duplicates", () => {
         const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
         const tree = new Tree(array);
 
@@ -50,24 +50,24 @@ describe("Tree (buildTree)", () => {
 })
 
 describe("Tree (includes)", () => {
-    test("throws type error from non-number data type", () => {
+    test("Throws type error from non-number data type", () => {
         const tree = new Tree([0]);
         expect(() => tree.includes("0")).toThrow(TypeError);
     })
-    test("returns false from 1 node tree", () => {
+    test("Returns false from 1 node tree", () => {
         const tree = new Tree([0])
         expect(tree.includes(1)).toBe(false)
     })
-    test("returns false from multi node tree", () => {
+    test("Returns false from multi node tree", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.includes(2)).toBe(false)
     })
-    test("returns true from 1 node tree", () => {
+    test("Returns true from 1 node tree", () => {
         const tree = new Tree([0])
         expect(tree.includes(0)).toBe(true)
     })
-    test("returns true from multi node tree", () => {
+    test("Returns true from multi node tree", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         const nodes = [3, 7, 23, 6345];
@@ -77,18 +77,18 @@ describe("Tree (includes)", () => {
 })
 
 describe("Tree (insert)", () => {
-    test("throws type error from non-number data type", () => {
+    test("Throws type error from non-number data type", () => {
         const tree = new Tree([0]);
         expect(() => tree.insert("0")).toThrow(TypeError);
     })
-    test("inserts nodes from 1 node tree", () => {
+    test("Inserts nodes from 1 node tree", () => {
         const tree = new Tree([4]);
         const inserts = [1, 7];
 
         inserts.forEach(v => tree.insert(v));
         inserts.forEach(v => expect(tree.includes(v)).toBe(true));
     })
-    test("inserts nodes from multi node tree", () => {
+    test("Inserts nodes from multi node tree", () => {
         const array = [1, 4, 8, 5, 9, 67, 324];
         const tree = new Tree(array);
         const inserts = [3, 7, 23, 6345];
@@ -96,7 +96,7 @@ describe("Tree (insert)", () => {
         inserts.forEach(v => tree.insert(v));
         inserts.forEach(v => expect(tree.includes(v)).toBe(true));
     })
-    test("inserts nodes whilst preserving order", () => {
+    test("Inserts nodes whilst preserving order", () => {
         const array = [7, 4, 23, 8, 3, 67, 6345];
         const tree = new Tree(array);
         const inserts = [1, 5, 9, 324];
@@ -112,7 +112,7 @@ describe("Tree (insert)", () => {
         inOrder(tree.root);
         expect(values).toEqual([...values].sort((a, b) => a - b));
     });
-    test("tree doesn't add node if it's already in the tree", () => {
+    test("Tree doesn't add node if it's already in the tree", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.includes(1)).toBe(true);
@@ -130,17 +130,17 @@ describe("Tree (insert)", () => {
 })
 
 describe("Tree (deleteItem)", () => {
-    test("throws type error from non-number data type", () => {
+    test("Throws type error from non-number data type", () => {
         const tree = new Tree([0]);
         expect(() => tree.deleteItem("0")).toThrow(TypeError);
     })
-    test("deletes node from 1 node tree", () => {
+    test("Deletes node from 1 node tree", () => {
         const value = 4;
         const tree = new Tree([value]);
         tree.deleteItem(value);
         expect(tree.includes(value)).toBe(false);
     })
-    test("deletes node with no children", () => {
+    test("Deletes node with no children", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         const toDelete = [3, 7, 23, 6345];
@@ -150,7 +150,7 @@ describe("Tree (deleteItem)", () => {
         toDelete.forEach(v => expect(tree.includes(v)).toBe(false));
         remaining.forEach(v => expect(tree.includes(v)).toBe(true));
     })
-    test("deletes node with 1 child", () => {
+    test("Deletes node with 1 child", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         const toDelete = [1, 5, 9, 324];
@@ -160,7 +160,7 @@ describe("Tree (deleteItem)", () => {
         toDelete.forEach(v => expect(tree.includes(v)).toBe(false));
         remaining.forEach(v => expect(tree.includes(v)).toBe(true));
     })
-    test("deletes node with 2 children", () => {
+    test("Deletes node with 2 children", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         const toDelete = [4, 67];
@@ -170,7 +170,7 @@ describe("Tree (deleteItem)", () => {
         toDelete.forEach(v => expect(tree.includes(v)).toBe(false));
         remaining.forEach(v => expect(tree.includes(v)).toBe(true));
     })
-    test("doesn't delete anything if value is not tree", () => {
+    test("Doesn't delete anything if value is not tree", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         tree.deleteItem(420);
@@ -189,26 +189,26 @@ describe("Tree (deleteItem)", () => {
 })
 
 describe("Tree (levelOrderForEach)", () => {
-    test("doesn't accept no callback", () => {
+    test("Doesn't accept no callback", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(() => tree.levelOrderForEach()).toThrow(Error);
     })
-    test("breadth-first level traversal (converts to string and concatenates)", () => {
+    test("Breadth-first level traversal (converts to string and concatenates)", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         let string = "";
         tree.levelOrderForEach(value => string = string + value + " ");
         expect(string).toEqual("8 4 67 1 5 9 324 3 7 23 6345 ");
     })
-    test("breadth-first level traversal (adds to array)", () => {
+    test("Breadth-first level traversal (adds to array)", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         const values = [];
         tree.levelOrderForEach(value => values.push(value));
         expect(values).toEqual([8, 4, 67, 1, 5, 9, 324, 3, 7, 23, 6345]);
     })
-    test("breadth-first level traversal (add to array and double each value)", () => {
+    test("Breadth-first level traversal (add to array and double each value)", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         const values = [];
@@ -218,7 +218,7 @@ describe("Tree (levelOrderForEach)", () => {
 })
 
 describe("Tree (inOrderForEach)", () => {
-    test("doesn't accept no callback", () => {
+    test("Doesn't accept no callback", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(() => tree.inOrderForEach()).toThrow(Error);
@@ -247,7 +247,7 @@ describe("Tree (inOrderForEach)", () => {
 })
 
 describe("Tree (preOrderForEach)", () => {
-    test("doesn't accept no callback", () => {
+    test("Doesn't accept no callback", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(() => tree.preOrderForEach()).toThrow(Error);
@@ -276,7 +276,7 @@ describe("Tree (preOrderForEach)", () => {
 })
 
 describe("Tree (postOrderForEach)", () => {
-    test("doesn't accept no callback", () => {
+    test("Doesn't accept no callback", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(() => tree.postOrderForEach()).toThrow(Error);
@@ -305,31 +305,31 @@ describe("Tree (postOrderForEach)", () => {
 })
 
 describe("Tree (height)", () => {
-    test("throws type error from non-number data type", () => {
+    test("Throws type error from non-number data type", () => {
         const tree = new Tree([0]);
         expect(() => tree.height("0")).toThrow(TypeError);
     })
-    test("returns undefined from value not found", () => {
+    test("Returns undefined from value not found", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.height(420)).toBe(undefined);
     })
-    test("returns 3 from node 8", () => {
+    test("Returns 3 from node 8", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.height(8)).toBe(3);
     })
-    test("returns 2 from node 4", () => {
+    test("Returns 2 from node 4", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.height(4)).toBe(2);
     })
-    test("returns 1 from node 9", () => {
+    test("Returns 1 from node 9", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.height(9)).toBe(1);
     })
-    test("returns 0 from node 6345", () => {
+    test("Returns 0 from node 6345", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.height(6345)).toBe(0);
@@ -337,33 +337,115 @@ describe("Tree (height)", () => {
 })
 
 describe("Tree (depth)", () => {
-    test("throws type error from non-number data type", () => {
+    test("Throws type error from non-number data type", () => {
         const tree = new Tree([0]);
         expect(() => tree.height("0")).toThrow(TypeError);
     })
-    test("returns undefined from value not found", () => {
+    test("Returns undefined from value not found", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.depth(420)).toBe(undefined);
     })
-    test("returns 3 from node 6345", () => {
+    test("Returns 3 from node 6345", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.depth(6345)).toBe(3);
     })
-    test("returns 2 from node 9", () => {
+    test("Returns 2 from node 9", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.depth(9)).toBe(2);
     })
-    test("returns 1 from node 4", () => {
+    test("Returns 1 from node 4", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.depth(4)).toBe(1);
     })
-    test("returns 0 from node 8", () => {
+    test("Returns 0 from node 8", () => {
         const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
         const tree = new Tree(array);
         expect(tree.depth(8)).toBe(0);
+    })
+})
+
+describe("Tree (isBalanced)", () => {
+    test("Returns true from 1 node tree", () => {
+        const tree = new Tree([0]);
+        expect(tree.isBalanced()).toBe(true);
+    })
+    test("Returns true from 2 node tree", () => {
+        const array = [8, 4];
+        const tree = new Tree(array);
+        expect(tree.isBalanced()).toBe(true);
+    })
+    test("Returns true from 3 node tree", () => {
+        const array = [8, 4, 67];
+        const tree = new Tree(array);
+        expect(tree.isBalanced()).toBe(true);
+    })
+    test("Returns true from 5 node tree", () => {
+        const array = [8, 4, 67, 1, 5];
+        const tree = new Tree(array);
+        expect(tree.isBalanced()).toBe(true);
+    })
+    test("Returns true from multi node tree", () => {
+        const array = [1, 7, 4, 23, 8, 3, 5, 9, 67, 6345, 324];
+        const tree = new Tree(array);
+        expect(tree.isBalanced()).toBe(true);
+    })
+    test("Returns false from 3 node tree", () => {
+        const array = [8, 4];
+        const tree = new Tree(array);
+        tree.insert(67);
+        expect(tree.isBalanced()).toBe(false);
+    })
+    test("Returns false from 5 node tree", () => {
+        const array = [8, 4];
+        const tree = new Tree(array);
+        tree.insert(67);
+        tree.insert(6345);
+        tree.insert(324);
+        expect(tree.isBalanced()).toBe(false);
+    })
+    test("Returns false from multi node tree", () => {
+        const array = [23, 5];
+        const tree = new Tree(array);
+        const values = [6345, 3, 1, 7, 324, 4, 8, 9, 67];
+        values.forEach(v => {
+            tree.insert(v);
+        })
+        expect(tree.isBalanced()).toBe(false);
+    })
+})
+
+describe("Tree (rebalance)", () => {
+    test("Balances unbalanced 3 node tree", () => {
+        const array = [8, 4];
+        const tree = new Tree(array);
+        tree.insert(67);
+        expect(tree.isBalanced()).toBe(false);
+        tree.rebalance();
+        expect(tree.isBalanced()).toBe(true);
+    })
+    test("Balances unbalanced 5 node tree", () => {
+        const array = [8, 4];
+        const tree = new Tree(array);
+        tree.insert(67);
+        tree.insert(6345);
+        tree.insert(324);
+        expect(tree.isBalanced()).toBe(false);
+        tree.rebalance();
+        expect(tree.isBalanced()).toBe(true);
+    })
+    test("Balances unbalanced multi node tree", () => {
+        const array = [23, 5];
+        const tree = new Tree(array);
+        const values = [6345, 3, 1, 7, 324, 4, 8, 9, 67];
+        values.forEach(v => {
+            tree.insert(v);
+        })
+        expect(tree.isBalanced()).toBe(false);
+        tree.rebalance();
+        expect(tree.isBalanced()).toBe(true);
     })
 })

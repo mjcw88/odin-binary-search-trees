@@ -20,6 +20,18 @@ export class Tree {
         if (!callback) throw new Error("A callback is required");
     }
 
+    #build(array, start, end) {
+        if (start > end) return null;
+
+        const mid = Math.floor((start + end) / 2);
+        const root = new Node(array[mid]);
+
+        root.left = this.#build(array, start, mid - 1);
+        root.right = this.#build(array, mid + 1, end);
+
+        return root;
+    }
+
     #buildTree(array) {
         this.#isValid(array);
 
@@ -63,18 +75,7 @@ export class Tree {
         const start = 0;
         const end = sortedArray.length - 1;
 
-        const build = (array, start, end) => {
-            if (start > end) return null;
-
-            const mid = Math.floor((start + end) / 2);
-            const root = new Node(array[mid]);
-
-            root.left = build(array, start, mid - 1);
-            root.right = build(array, mid + 1, end);
-
-            return root;
-        }
-        return build(sortedArray, start, end);
+        return this.#build(sortedArray, start, end);
     }
 
     // Public Methods
@@ -154,7 +155,7 @@ export class Tree {
             callback(node.data);
             inOrder(node.right);
         };
-        inOrder(tree.root);
+        inOrder(this.root);
     }
 
     preOrderForEach(callback) {
@@ -166,7 +167,7 @@ export class Tree {
             preOrder(node.left);
             preOrder(node.right);
         };
-        preOrder(tree.root);
+        preOrder(this.root);
     }
 
     postOrderForEach(callback) {
@@ -178,7 +179,7 @@ export class Tree {
             postOrder(node.right);
             callback(node.data);
         };
-        postOrder(tree.root);
+        postOrder(this.root);
     }
 
     height(value) {
@@ -216,29 +217,33 @@ export class Tree {
     }
 
     isBalanced() {
+        if (!this.root) return;
+        const findHeight = (node) => {
+            if (node === null) return 0;
 
+            let leftHeight = findHeight(node.left);
+            if (leftHeight === -1) return -1;
+            let rightHeight = findHeight(node.right);
+            if (rightHeight === -1) return -1;
+
+            if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+
+            return Math.max(leftHeight, rightHeight) + 1;
+        }
+        return findHeight(this.root) !== -1;
     }
 
     rebalance() {
-
+        const values = [];
+        const inOrder = (node) => {
+            if (node === null) return;
+            inOrder(node.left);
+            values.push(node.data);
+            inOrder(node.right);
+        };
+        inOrder(this.root);
+        const start = 0;
+        const end = values.length - 1;
+        this.root = this.#build(values, start, end);
     }
 }
-
-const prettyPrint = (node, prefix = '', isLeft = true) => {
-  if (node === null || node === undefined) {
-    return;
-  }
-
-  prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
-  console.log(`${prefix}${isLeft ? '└── ' : '┌── '}${node.data}`);
-  prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
-}
-
-const array = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-const tree = new Tree(array);
-prettyPrint(tree.root);
-
-console.log(tree.height(8));
-console.log(tree.height(67));
-console.log(tree.height(324));
-console.log(tree.height(6345));
